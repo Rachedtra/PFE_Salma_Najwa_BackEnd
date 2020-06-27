@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Poulina.GestionMs.Domain.Commands;
+using Poulina.GestionMs.Domain.Handler;
+using Poulina.GestionMs.Domain.Interface;
 using Poulina.GestionMs.Domain.Models;
 using Poulina.GestionMs.Domain.Queries;
 
@@ -16,11 +19,12 @@ namespace Poulina.GestionMS.Api.Controllers
     public class DemandeInfoController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IRepository<Demande_information> _repository;
 
-        public DemandeInfoController(IMediator mediator)
+        public DemandeInfoController(IMediator mediator, IRepository<Demande_information> repository)
         {
             _mediator = mediator;
-
+            _repository = repository;
 
         }
         // GET: api/Emp
@@ -36,9 +40,15 @@ namespace Poulina.GestionMS.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Demande_information>> Get(Guid id)
         {
-            var k = new GetQueryByID<Demande_information>(id);
-            var result = await _mediator.Send(k);
-            return Ok(result);
+            //var query = new GetQueryByID<Demande_information>(id);
+            // var result = await _mediator.Send(k);
+            // return Ok(result);
+            {
+                var k = new GetQueryByID<Demande_information>(id);
+                var result = await _mediator.Send(k);
+                return Ok(result);
+            }
+
         }
 
         // POST: api/Emp
@@ -50,8 +60,9 @@ namespace Poulina.GestionMS.Api.Controllers
             return Ok(result);
         }
 
+
         // PUT: api/Emp/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult<Demande_information>> Put([FromBody] Demande_information etu)
         {
             var k = new PutGeneric<Demande_information>(etu);

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Poulina.GestionMs.Domain.Commands;
 using Poulina.GestionMs.Domain.Models;
 using Poulina.GestionMs.Domain.Queries;
+using System;
+using System.Threading.Tasks;
 
 namespace Poulina.GestionMS.Api.Controllers
 {
@@ -50,8 +47,9 @@ namespace Poulina.GestionMS.Api.Controllers
             return Ok(result);
         }
 
+
         // PUT: api/Emp/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult<Commentaire>> Put([FromBody] Commentaire etu)
         {
             var k = new PutGeneric<Commentaire>(etu);

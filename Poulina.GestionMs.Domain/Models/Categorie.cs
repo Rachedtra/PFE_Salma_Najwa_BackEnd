@@ -16,7 +16,7 @@ namespace Poulina.GestionMs.Domain.Models
         public virtual ICollection<Dem_Categorie> Dem_Categories { get; set; }
 
         //relation entre categories et sous categories
-        public ICollection<sous_categorie> Sous_categories { get; set; }
+        public virtual ICollection<sous_categorie> Sous_Categories { get; set; }
 
 
     }

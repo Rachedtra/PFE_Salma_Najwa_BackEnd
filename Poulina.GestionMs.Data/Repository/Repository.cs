@@ -25,7 +25,7 @@ namespace Poulina.GestionMs.Data.Repository
         public T GetById(Guid id)
         {
             IQueryable<T> query = _context.Set<T>();
-            return _context.Set<T>().FirstOrDefault();
+            return table.Find(id);
         }
 
         public string Add(T entity)

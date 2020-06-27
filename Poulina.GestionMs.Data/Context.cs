@@ -13,7 +13,7 @@ namespace Poulina.GestionMs.Data
         {
         }
         public DbSet<Commentaire> Commentaires { get; set; }
-        public DbSet<Demande_information> demandes { get; set; }
+        public DbSet<Demande_information> Demande_Information  { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<sous_categorie> Sous_Categories { get; set; }
         public DbSet<Categorie> Categories { get; set; }
@@ -33,8 +33,8 @@ namespace Poulina.GestionMs.Data
 
             modelBuilder.Entity<sous_categorie>()
                  .HasOne(e => e.Categorie)
-                  .WithMany(s => s.Sous_categories)
-                  .HasForeignKey(p => p.CategorieFK); //one to many
+                  .WithMany(s => s.Sous_Categories)
+                  .HasForeignKey(p => p.FK_SousCategorie); //one to many
 
 
 
@@ -43,27 +43,27 @@ namespace Poulina.GestionMs.Data
                .WithMany(s => s.Comm_Infos)
                 .HasForeignKey(p => p.IdCom); //one to many
             modelBuilder.Entity<Comm_Info>()
-               .HasOne(e => e.Demande)
+               .HasOne(e => e.Demande_Information)
                .WithMany(s => s.Comm_Infos)
                 .HasForeignKey(p => p.IdInf); //one to many
 
             modelBuilder.Entity<Comm_Vote>()
                .HasOne(e => e.Commentaire)
                .WithMany(s => s.Comm_Votes)
-                .HasForeignKey(p => p.FK_Com); //one to many
+                .HasForeignKey(p => p.IdCom); //one to many
             modelBuilder.Entity<Comm_Vote>()
                .HasOne(e => e.Vote)
                .WithMany(s => s.Comm_Votes)
-                .HasForeignKey(p => p.FK_Vote);
+                .HasForeignKey(p => p.IdVote);
 
             modelBuilder.Entity<Dem_Categorie>()
           .HasOne(e => e.Demande_information)
           .WithMany(s => s.Dem_Categories)
-           .HasForeignKey(p => p.FK_DemandeInfo); //one to many
+           .HasForeignKey(p => p.IdInf); //one to many
             modelBuilder.Entity<Dem_Categorie>()
                .HasOne(e => e.Categories)
                .WithMany(s => s.Dem_Categories)
-                .HasForeignKey(p => p.FK_Categorie);
+                .HasForeignKey(p => p.IdCategorie);
 
 
 

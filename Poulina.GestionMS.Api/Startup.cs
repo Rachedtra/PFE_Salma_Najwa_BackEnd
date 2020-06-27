@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Poulina.GestionMs.Data;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Poulina.GestionMS.Api
 {
@@ -34,6 +35,10 @@ namespace Poulina.GestionMS.Api
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddDbContext<Context>(opts => opts.UseSqlServer(Configuration.GetConnectionString("Commentaire")));
             RegisterService(services);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Managment MS", Version = "v1" });
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMvc().AddJsonOptions(options =>
@@ -59,7 +64,18 @@ namespace Poulina.GestionMS.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(options =>
+          options.WithOrigins("http://localhost:4200")
+          .AllowAnyMethod()
+          .SetIsOriginAllowed((host) => true)
+          .AllowCredentials()
+          .AllowAnyHeader());
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gestion  Microservice V1");
+            });
         }
     }
 }

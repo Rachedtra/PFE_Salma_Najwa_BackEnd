@@ -3,10 +3,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Poulina.GestionMs.Data.Migrations
 {
-    public partial class table2 : Migration
+    public partial class app1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    IdCategorie = table.Column<Guid>(nullable: false),
+                    Label = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.IdCategorie);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Commentaires",
                 columns: table => new
@@ -20,16 +32,18 @@ namespace Poulina.GestionMs.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "demandes",
+                name: "Demande_Information",
                 columns: table => new
                 {
                     IdInf = table.Column<Guid>(nullable: false),
+                    IdDomain = table.Column<Guid>(nullable: false),
+                    Titre = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_demandes", x => x.IdInf);
+                    table.PrimaryKey("PK_Demande_Information", x => x.IdInf);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,22 +59,22 @@ namespace Poulina.GestionMs.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Sous_Categories",
                 columns: table => new
                 {
-                    IdCategorie = table.Column<Guid>(nullable: false),
+                    IdSC = table.Column<Guid>(nullable: false),
                     Label = table.Column<string>(nullable: true),
-                    demandesIdInf = table.Column<Guid>(nullable: true)
+                    FK_SousCategorie = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.IdCategorie);
+                    table.PrimaryKey("PK_Sous_Categories", x => x.IdSC);
                     table.ForeignKey(
-                        name: "FK_Categories_demandes_demandesIdInf",
-                        column: x => x.demandesIdInf,
-                        principalTable: "demandes",
-                        principalColumn: "IdInf",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Sous_Categories_Categories_FK_SousCategorie",
+                        column: x => x.FK_SousCategorie,
+                        principalTable: "Categories",
+                        principalColumn: "IdCategorie",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,41 +89,16 @@ namespace Poulina.GestionMs.Data.Migrations
                 {
                     table.PrimaryKey("PK_Comm_Info", x => x.IdCinfo);
                     table.ForeignKey(
-                        name: "FK_Comm_Info_demandes_IdCinfo",
-                        column: x => x.IdCinfo,
-                        principalTable: "demandes",
-                        principalColumn: "IdInf",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Comm_Info_Commentaires_IdCom",
                         column: x => x.IdCom,
                         principalTable: "Commentaires",
                         principalColumn: "IdCom",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Comm_Vote",
-                columns: table => new
-                {
-                    IdCVote = table.Column<Guid>(nullable: false),
-                    IdCom = table.Column<Guid>(nullable: true),
-                    IdVote = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comm_Vote", x => x.IdCVote);
                     table.ForeignKey(
-                        name: "FK_Comm_Vote_Votes_IdCVote",
-                        column: x => x.IdCVote,
-                        principalTable: "Votes",
-                        principalColumn: "IdVote",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comm_Vote_Commentaires_IdCom",
-                        column: x => x.IdCom,
-                        principalTable: "Commentaires",
-                        principalColumn: "IdCom",
+                        name: "FK_Comm_Info_Demande_Information_IdInf",
+                        column: x => x.IdInf,
+                        principalTable: "Demande_Information",
+                        principalColumn: "IdInf",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -117,51 +106,51 @@ namespace Poulina.GestionMs.Data.Migrations
                 name: "Dem_Categorie",
                 columns: table => new
                 {
-                    IdCateg = table.Column<Guid>(nullable: false),
-                    IdCategorie = table.Column<Guid>(nullable: false),
-                    IdInf = table.Column<Guid>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    IdInf = table.Column<Guid>(nullable: false),
+                    IdCategorie = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Dem_Categorie", x => x.IdCateg);
-                    table.UniqueConstraint("AK_Dem_Categorie_IdCategorie", x => x.IdCategorie);
+                    table.PrimaryKey("PK_Dem_Categorie", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Dem_Categorie_Categories_IdCateg",
-                        column: x => x.IdCateg,
+                        name: "FK_Dem_Categorie_Categories_IdCategorie",
+                        column: x => x.IdCategorie,
                         principalTable: "Categories",
                         principalColumn: "IdCategorie",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Dem_Categorie_demandes_IdInf",
+                        name: "FK_Dem_Categorie_Demande_Information_IdInf",
                         column: x => x.IdInf,
-                        principalTable: "demandes",
+                        principalTable: "Demande_Information",
                         principalColumn: "IdInf",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sous_Categories",
+                name: "Comm_Vote",
                 columns: table => new
                 {
-                    IdSC = table.Column<Guid>(nullable: false),
-                    Label = table.Column<string>(nullable: true),
-                    CategorieFK = table.Column<Guid>(nullable: false)
+                    IDCVote = table.Column<Guid>(nullable: false),
+                    IdCom = table.Column<Guid>(nullable: false),
+                    IdVote = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sous_Categories", x => x.IdSC);
+                    table.PrimaryKey("PK_Comm_Vote", x => x.IDCVote);
                     table.ForeignKey(
-                        name: "FK_Sous_Categories_Categories_CategorieFK",
-                        column: x => x.CategorieFK,
-                        principalTable: "Categories",
-                        principalColumn: "IdCategorie",
+                        name: "FK_Comm_Vote_Commentaires_IdCom",
+                        column: x => x.IdCom,
+                        principalTable: "Commentaires",
+                        principalColumn: "IdCom",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comm_Vote_Votes_IdVote",
+                        column: x => x.IdVote,
+                        principalTable: "Votes",
+                        principalColumn: "IdVote",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Categories_demandesIdInf",
-                table: "Categories",
-                column: "demandesIdInf");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comm_Info_IdCom",
@@ -169,9 +158,24 @@ namespace Poulina.GestionMs.Data.Migrations
                 column: "IdCom");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comm_Info_IdInf",
+                table: "Comm_Info",
+                column: "IdInf");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comm_Vote_IdCom",
                 table: "Comm_Vote",
                 column: "IdCom");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comm_Vote_IdVote",
+                table: "Comm_Vote",
+                column: "IdVote");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dem_Categorie_IdCategorie",
+                table: "Dem_Categorie",
+                column: "IdCategorie");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dem_Categorie_IdInf",
@@ -179,9 +183,9 @@ namespace Poulina.GestionMs.Data.Migrations
                 column: "IdInf");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sous_Categories_CategorieFK",
+                name: "IX_Sous_Categories_FK_SousCategorie",
                 table: "Sous_Categories",
-                column: "CategorieFK");
+                column: "FK_SousCategorie");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -199,16 +203,16 @@ namespace Poulina.GestionMs.Data.Migrations
                 name: "Sous_Categories");
 
             migrationBuilder.DropTable(
-                name: "Votes");
-
-            migrationBuilder.DropTable(
                 name: "Commentaires");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Votes");
 
             migrationBuilder.DropTable(
-                name: "demandes");
+                name: "Demande_Information");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }

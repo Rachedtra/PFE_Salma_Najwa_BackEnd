@@ -10,8 +10,8 @@ using Poulina.GestionMs.Data;
 namespace Poulina.GestionMs.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200309203057_table2")]
-    partial class table2
+    [Migration("20200520171156_app1")]
+    partial class app1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,18 +28,15 @@ namespace Poulina.GestionMs.Data.Migrations
 
                     b.Property<string>("Label");
 
-                    b.Property<Guid?>("demandesIdInf");
-
                     b.HasKey("IdCategorie");
-
-                    b.HasIndex("demandesIdInf");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Comm_Info", b =>
                 {
-                    b.Property<Guid>("IdCinfo");
+                    b.Property<Guid>("IdCinfo")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("IdCom");
 
@@ -49,20 +46,25 @@ namespace Poulina.GestionMs.Data.Migrations
 
                     b.HasIndex("IdCom");
 
+                    b.HasIndex("IdInf");
+
                     b.ToTable("Comm_Info");
                 });
 
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Comm_Vote", b =>
                 {
-                    b.Property<Guid>("IdCVote");
+                    b.Property<Guid>("IDCVote")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("IdCom");
+                    b.Property<Guid>("IdCom");
 
-                    b.Property<Guid?>("IdVote");
+                    b.Property<Guid>("IdVote");
 
-                    b.HasKey("IdCVote");
+                    b.HasKey("IDCVote");
 
                     b.HasIndex("IdCom");
+
+                    b.HasIndex("IdVote");
 
                     b.ToTable("Comm_Vote");
                 });
@@ -81,15 +83,16 @@ namespace Poulina.GestionMs.Data.Migrations
 
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Dem_Categorie", b =>
                 {
-                    b.Property<Guid?>("IdCateg");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid>("IdCategorie");
 
                     b.Property<Guid>("IdInf");
 
-                    b.HasKey("IdCateg");
+                    b.HasKey("Id");
 
-                    b.HasAlternateKey("IdCategorie");
+                    b.HasIndex("IdCategorie");
 
                     b.HasIndex("IdInf");
 
@@ -105,9 +108,13 @@ namespace Poulina.GestionMs.Data.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<Guid>("IdDomain");
+
+                    b.Property<string>("Titre");
+
                     b.HasKey("IdInf");
 
-                    b.ToTable("demandes");
+                    b.ToTable("Demande_Information");
                 });
 
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Vote", b =>
@@ -127,57 +134,50 @@ namespace Poulina.GestionMs.Data.Migrations
                     b.Property<Guid>("IdSC")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("CategorieFK");
+                    b.Property<Guid>("FK_SousCategorie");
 
                     b.Property<string>("Label");
 
                     b.HasKey("IdSC");
 
-                    b.HasIndex("CategorieFK");
+                    b.HasIndex("FK_SousCategorie");
 
                     b.ToTable("Sous_Categories");
                 });
 
-            modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Categorie", b =>
-                {
-                    b.HasOne("Poulina.GestionMs.Domain.Models.Demande_information", "demandes")
-                        .WithMany()
-                        .HasForeignKey("demandesIdInf");
-                });
-
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Comm_Info", b =>
                 {
-                    b.HasOne("Poulina.GestionMs.Domain.Models.Demande_information", "Demande")
-                        .WithMany("Comm_Infos")
-                        .HasForeignKey("IdCinfo")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Poulina.GestionMs.Domain.Models.Commentaire", "Commentaires")
                         .WithMany("Comm_Infos")
                         .HasForeignKey("IdCom")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Poulina.GestionMs.Domain.Models.Demande_information", "Demande_Information")
+                        .WithMany("Comm_Infos")
+                        .HasForeignKey("IdInf");
                 });
 
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Comm_Vote", b =>
                 {
-                    b.HasOne("Poulina.GestionMs.Domain.Models.Vote", "Votes")
+                    b.HasOne("Poulina.GestionMs.Domain.Models.Commentaire", "Commentaire")
                         .WithMany("Comm_Votes")
-                        .HasForeignKey("IdCVote")
+                        .HasForeignKey("IdCom")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Poulina.GestionMs.Domain.Models.Commentaire", "Commentaires")
+                    b.HasOne("Poulina.GestionMs.Domain.Models.Vote", "Vote")
                         .WithMany("Comm_Votes")
-                        .HasForeignKey("IdCom");
+                        .HasForeignKey("IdVote")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.Dem_Categorie", b =>
                 {
                     b.HasOne("Poulina.GestionMs.Domain.Models.Categorie", "Categories")
                         .WithMany("Dem_Categories")
-                        .HasForeignKey("IdCateg")
+                        .HasForeignKey("IdCategorie")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Poulina.GestionMs.Domain.Models.Demande_information", "Demandes")
+                    b.HasOne("Poulina.GestionMs.Domain.Models.Demande_information", "Demande_information")
                         .WithMany("Dem_Categories")
                         .HasForeignKey("IdInf")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -186,8 +186,8 @@ namespace Poulina.GestionMs.Data.Migrations
             modelBuilder.Entity("Poulina.GestionMs.Domain.Models.sous_categorie", b =>
                 {
                     b.HasOne("Poulina.GestionMs.Domain.Models.Categorie", "Categorie")
-                        .WithMany("Sous_categories")
-                        .HasForeignKey("CategorieFK")
+                        .WithMany("Sous_Categories")
+                        .HasForeignKey("FK_SousCategorie")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

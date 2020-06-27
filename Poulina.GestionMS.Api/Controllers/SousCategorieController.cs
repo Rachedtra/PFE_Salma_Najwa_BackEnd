@@ -27,7 +27,7 @@ namespace Poulina.GestionMS.Api.Controllers
     [HttpGet]
     public async Task<ActionResult<sous_categorie>> GETAll()
     {
-        var x = new GetAllQuery<Sous_Categorie>();
+        var x = new GetAllQuery<sous_categorie>();
         var result = await _mediator.Send(x);
         return Ok(result);
     }
@@ -36,7 +36,7 @@ namespace Poulina.GestionMS.Api.Controllers
     [HttpGet("{id}")]
     public async Task<ActionResult<sous_categorie>> Get(Guid id)
     {
-        var k = new GetQueryByID<Sous_Categorie>(id);
+        var k = new GetQueryByID<sous_categorie>(id);
         var result = await _mediator.Send(k);
         return Ok(result);
     }
@@ -51,7 +51,7 @@ namespace Poulina.GestionMS.Api.Controllers
     }
 
     // PUT: api/Emp/5
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<ActionResult<sous_categorie>> Put([FromBody] sous_categorie etu)
     {
         var k = new PutGeneric<sous_categorie>(etu);

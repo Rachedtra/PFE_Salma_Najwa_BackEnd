@@ -52,7 +52,7 @@ namespace Poulina.GestionMS.Api.Controllers
         }
 
         // PUT: api/Emp/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult<Categorie>> Put([FromBody] Categorie etu)
         {
             var k = new PutGeneric<Categorie>(etu);

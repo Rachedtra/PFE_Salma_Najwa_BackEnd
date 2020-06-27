@@ -10,9 +10,9 @@ namespace Poulina.GestionMs.Domain.Models
         [Key]
         public Guid Id { get; set; }
         public virtual Demande_information Demande_information { get; set; }
-        public Guid FK_DemandeInfo{ get; set; }
+        public Guid IdInf { get; set; }
         public virtual Categorie Categories { get; set; }
-        public Guid FK_Categorie { get; set; }
+        public Guid IdCategorie { get; set; }
 
     }
 }

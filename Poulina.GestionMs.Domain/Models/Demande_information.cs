@@ -9,7 +9,9 @@ namespace Poulina.GestionMs.Domain.Models
     {
         [Key]
         public Guid IdInf { get; set; }
+        public Guid IdDomain { get; set; }
 
+        public string Titre { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
 
